@@ -7,9 +7,7 @@ import os
 
 class Mail:
     def login(self):
-        # Login to IMAP server
-        #imap_url = 'imap.gmail.com'
-        #imap_url = "imap.mail.me.com"
+        # Login to IMAP server        
         imap_url = os.environ.get("IMAP_URL")
         user = os.environ.get("IMAP_USER")
         password = os.environ.get("IMAP_PASSWORD")
@@ -29,14 +27,13 @@ class Mail:
         return messages
     
 
-    def move(self,email_id,label):
-        # Move the selected email to 'NewFolder'
+    def move(self,email_id,label):        
         # The command could vary based on the server. For Gmail, it's usually 'COPY' then 'STORE' with '\\Deleted' flag
         result = self.mail.copy(email_id, label)
         if result[0] == 'OK':
             self.mail.store(email_id, '+FLAGS', '\\Deleted')  # Mark the email for deletion in the original folder
             self.mail.expunge()  # Purge emails marked for deletion
-            print(f"Email {email_id} moved to NewFolder successfully.")
+            print(f"Email {email_id} moved to {label} successfully.")
         else:
             print("Failed to move the email.")
 
