@@ -35,6 +35,8 @@ class Labeler:
         If it is a promotional email, use category "ad".
         If it is a mail related to the flat in Jahngasse 19, please summarize it in a single line and use  category "flat".
         If it is a personal email, use category "personal".
+        If none of the above rules apply, use category "unknown".
+        Remember to quote all string values in the JSON.
         EMAIL:
 
         """

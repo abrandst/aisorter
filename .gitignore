@@ -2,4 +2,6 @@
 mail
 result
 venv
+.env
+.env-gmail
 __pycache__

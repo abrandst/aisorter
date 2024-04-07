@@ -3,13 +3,17 @@ import email
 from email.header import decode_header
 import os
 
+
+
 class Mail:
     def login(self):
         # Login to IMAP server
         #imap_url = 'imap.gmail.com'
-        imap_url = "imap.mail.me.com"
+        #imap_url = "imap.mail.me.com"
+        imap_url = os.environ.get("IMAP_URL")
         user = os.environ.get("IMAP_USER")
         password = os.environ.get("IMAP_PASSWORD")
+
         self.mail = imaplib.IMAP4_SSL(imap_url)
         self.mail.login(user, password)
         print("Login to IMAP server")
@@ -36,7 +40,7 @@ class Mail:
         else:
             print("Failed to move the email.")
 
-    def move(self,email_id,label):
+    def copy(self,email_id,label):
         # Move the selected email to 'NewFolder'
         # The command could vary based on the server. For Gmail, it's usually 'COPY' then 'STORE' with '\\Deleted' flag
         result = self.mail.copy(email_id, label)
@@ -46,14 +50,15 @@ class Mail:
             print("Failed to move the email.")
 
     def get_text(self,mail_id):
-        status, data = self.mail.fetch(mail_id, '(RFC822)')
+        status, data = self.mail.fetch(mail_id, 'BODY[]')
+        #status, data = self.mail.fetch(mail_id, '(RFC822)')
         if status != 'OK':
             print(f"Error fetching email {mail_id}.")
             raise Exception("failed to fetch email")
 
         # Parse the raw email content
         raw_email = data[0][1]
-        msg = email.message_from_bytes(raw_email, 'UTF-8')
+        msg = email.message_from_bytes(raw_email)
 
         # Initialize email body
         email_body = ""
@@ -76,3 +81,6 @@ class Mail:
         else:
             email_body = msg.get_payload(decode=True).decode()
         return email_body
+
+        
+        
